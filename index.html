@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Egg Tapping Game</title>
+	<style>
+		body {
+			background-color: #222;
+			color: #fff;
+			font-family: Arial, sans-serif;
+			text-align: center;
+		}
+
+		#egg {
+			display: block;
+			margin: auto;
+			width: 800px;
+			height: 900px;
+			cursor: pointer;
+		}
+
+		#count-container {
+			position: absolute;
+			top: 0;
+			left: 0;
+			margin: 1rem;
+		}
+
+		#count {
+			font-size: 5rem;
+			margin-bottom: 1rem;
+		}
+
+		#timer {
+			font-size: 3rem;
+			margin-bottom: 1rem;
+		}
+
+		#score {
+			font-size: 3rem;
+		}
+
+		#leaderboard {
+			position: absolute;
+			top: 0;
+			right: 0;
+			text-align: center;
+			font-size: 2rem;
+			margin: 1rem;
+		}
+
+		#high-scores {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			max-width: 300px;
+			margin: auto;
+		}
+
+		#high-scores li {
+			margin-bottom: 0.5rem;
+			border-bottom: 1px solid #444;
+			padding-bottom: 0.5rem;
+		}
+
+		button {
+			background-color: #333;
+			color: #fff;
+			border: none;
+			padding: 0.5rem 1rem;
+			font-size: 1.5rem;
+			cursor: pointer;
+			margin-top: 2rem;
+		}
+
+		button:hover {
+			background-color: #444;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		var name = prompt("What's your name?");
+		if (name == null || name == "") {
+			name = "Guest";
+		}
+		document.write("<h1>Welcome, " + name + "!</h1>");
+	</script>
+
+	<img id="egg" src="1d441906db3b1.png">
+	<div id="count-container">
+		<div id="timer">30</div>
+		<div id="count">0</div>
+		<div id="score">0</div>
+	</div>
+	<div id="leaderboard">
+		<h2>High Scores</h2>
+		<ol id="high-scores">
+			<li>John - 1000</li>
+			<li>Jane - 800</li>
+			<li>Bob - 600</li>
+		</ol>
+	</div>
+	<button id="play-again-btn" onclick="resetGame()">Play Again</button>
+
+	<script>
+		// Initialize variables
+		var count = 0;
+		var score = 0;
+		var egg = document.getElementById('egg');
+		var countElem = document.getElementById('count');
+		var scoreElem = document.getElementById('score');
+		var timerElem = document.getElementById('timer');
+		var highScoresElem = document.getElementById('high-scores');
+		var timer = 30;
+		var multiplier = 1;
+
+		// Set up timer
+		var countdown = setInterval(function() {
+			timer--;
+			timerElem.innerHTML = timer;
+			if (timer == 0) {
+				clearInterval(countdown);
+				egg.removeEventListener('click', clickHandler);
+				alert('Game Over! Your score is ' + score);
+				addScoreToLeaderboard(name, score);
+			}
+		}, 1000);
+
+		// Add click event listener to egg
+		egg.addEventListener('click', clickHandler);
+
+		// Click event handler for egg
+		function clickHandler() {
+			count += multiplier;
+			score += multiplier;
+			countElem.innerHTML = count;
+			scoreElem.innerHTML = score;
+			playSoundEffect('0224.mp3');
+		}
+		var powerUp = Math.floor(Math.random() * 10);
+			if (powerUp == 0) { // Golden Egg - 10 bonus points
+				score += 10;
+				scoreElem.innerHTML = score;
+				playSoundEffect('powerup.wav');
+			} else if (powerUp == 1) { // Clock - Add 5 seconds to timer
+				timer += 5;
+				timerElem.innerHTML = timer;
+				playSoundEffect('powerup.wav');
+			}
+
+		// Function to play sound effect
+		function playSoundEffect(filename) {
+			var audio = new Audio(filename);
+			audio.play();
+		}
+
+		// Function to add score to leaderboard
+		function addScoreToLeaderboard(name, score) {
+			var newScoreElem = document.createElement('li');
+			newScoreElem.innerHTML = name + ' - ' + score;
+			highScoresElem.appendChild(newScoreElem);
+		}
+		function resetGame() {
+  // Reset variables
+  count = 0;
+  score = 0;
+  timer = 30;
+  multiplier = 1;
+
+  // Update UI
+  countElem.innerHTML = count;
+  scoreElem.innerHTML = score;
+  timerElem.innerHTML = timer;
+
+  // Reset high scores
+  highScoresElem.innerHTML = '<li>John - 1000</li><li>Jane - 800</li><li>Bob - 600</li>';
+
+  // Restart countdown and click event listener
+  clearInterval(countdown);
+  countdown = setInterval(function() {
+    timer--;
+    timerElem.innerHTML = timer;
+    if (timer == 0) {
+      clearInterval(countdown);
+      egg.removeEventListener('click', clickHandler);
+      alert('Game Over! Your score is ' + score);
+      addScoreToLeaderboard(name, score);
+    }
+  }, 1000);
+  egg.addEventListener('click', clickHandler);
+}
+	</script>
+</body>
+</html>
